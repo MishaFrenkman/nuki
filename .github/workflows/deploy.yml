@@ -1,0 +1,62 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    steps:
+      # checkout the repo
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # setup node
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16x'
+
+      # cache node_modules
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      # install dependencies
+      - name: Install
+        run: yarn --prefer-offline --frozen-lockfile
+
+      # build
+      - name: Build
+        run: yarn build
+
+      # auth
+      - name: Google Auth
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+      
+      # deploy
+      - name: Deploy
+        id: deploy
+        uses: google-github-actions/deploy-cloud-functions@v1
+        with: 
+          name: nuki-opener
+          runtime: nodejs16
+          source_dir: bin
+          memory_mb: 128
+          region: europe-west3
+          max_instances: 1
+          env_vars: API_AUTH=${{ secrets.API_AUTH }},DOOR_FLOOR=${{ secrets.DOOR_FLOOR }},DOOR_STREET=${{ secrets.DOOR_STREET }},NUKI_TOKEN=${{ secrets.NUKI_TOKEN }},
+
+      - name: Info
+        run: 'curl "${{ steps.deploy.outputs.url }}"'
