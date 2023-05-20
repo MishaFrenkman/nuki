@@ -54,7 +54,7 @@ jobs:
           runtime: nodejs16
           source_dir: bin
           memory_mb: 128
-          region: europe-west4
+          region: europe-west2
           max_instances: 1
           service_account_email: ${{ secrets.GCP_SA_EMAIL }}
           
