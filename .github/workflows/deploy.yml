@@ -56,6 +56,8 @@ jobs:
           memory_mb: 128
           region: europe-west3
           max_instances: 1
+          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+          
           env_vars: API_AUTH=${{ secrets.API_AUTH }},DOOR_FLOOR=${{ secrets.DOOR_FLOOR }},DOOR_STREET=${{ secrets.DOOR_STREET }},NUKI_TOKEN=${{ secrets.NUKI_TOKEN }},
 
       - name: Info
