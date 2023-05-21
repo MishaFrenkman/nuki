@@ -37,14 +37,22 @@ jobs:
       # build
       - name: Build
         run: yarn build
+        env:
+          API_AUTH: ${{ secrets.API_AUTH }}
+          DOOR_FLOOR: ${{ secrets.DOOR_FLOOR }}
+          DOOR_STREET: ${{ secrets.DOOR_STREET }}
+          NUKI_TOKEN: ${{ secrets.NUKI_TOKEN }}
+
+      # GCP
+      - name: Setup GCLoud
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          version: 'latest'
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.PROJECT_ID }}
 
       - name: Deploy
-        uses: convictional/gcp-storage-action@master
-        with:
-          application_credentials: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ secrets.PROJECT_ID }}
-          command: gcloud builds submit
-
+        run: gcloud builds submit
         env:
           API_AUTH: ${{ secrets.API_AUTH }}
           DOOR_FLOOR: ${{ secrets.DOOR_FLOOR }}
