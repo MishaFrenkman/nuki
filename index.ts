@@ -40,8 +40,6 @@ app.get('/', asyncWrapper(async (req: express.Request, res: express.Response) =>
 
   const { authorization } = req.headers;
 
-  console.log(req.headers);
-
   if (authorization !== process.env.API_AUTH) {
     return res.status(401).send('Unauthorized');
   }
