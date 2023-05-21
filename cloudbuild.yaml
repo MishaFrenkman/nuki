@@ -18,7 +18,7 @@ steps:
     '--region', 'europe-west3', 
     '--platform', 'managed',
     '--max-instances', '1',
-    '--memory', '512',
+    '--memory', '128Mi',
     '--allow-unauthenticated',
     '--min-instances', '0'
   ]
