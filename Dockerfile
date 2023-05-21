@@ -5,7 +5,6 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 COPY bin/index.js index.js
-COPY cloudbuild.yaml cloudbuild.yaml
 
 EXPOSE 8080
 
